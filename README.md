@@ -1,5 +1,5 @@
 # Kaggle-Codes
-## These are the codes I used for Kaggle my submissions in Kaggle.
+## These are the codes I used for my submissions in Kaggle.
 
 1. HR_Exercise_kaggle.R - was used for my kernel submission
 https://www.kaggle.com/grejsegura/hr-exercise
