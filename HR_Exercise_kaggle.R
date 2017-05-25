@@ -23,7 +23,7 @@ Let us check the satisfaction level of all employees and see the distribution.
 ```{r, message = F, warning = F}
 hr.data$left <- as.factor(hr.data$left)
 
-sat.level <- ggplot(hr.data, aes(hr.data$satisfaction_level)) + geom_density(kernel = "gaussian")
+sat.level <- ggplot(hr.data, aes(hr.data$satisfaction_level)) + geom_density(kernel = "gaussian", fill = 'yellow', alpha = 0.3)
 sat.level
 ```
 
@@ -34,7 +34,7 @@ First, those who left.
 ```{r, message = F, warning = F}
 sat.left <- hr.data[hr.data$left == 1, c("satisfaction_level", "left")]
 
-sat.1 <- ggplot(sat.left, aes(satisfaction_level)) + geom_density(kernel = "gaussian")
+sat.1 <- ggplot(sat.left, aes(satisfaction_level)) + geom_density(kernel = "gaussian", fill = 'red', alpha = 0.2)
 sat.1
 ```
 
@@ -44,7 +44,7 @@ Then those who stayed.
 ```{r, message = F, warning = F}
 sat.stayed <- hr.data[hr.data$left == 0, c("satisfaction_level", "left")]
 
-sat.0 <- ggplot(sat.stayed, aes(satisfaction_level)) + geom_density(kernel = "gaussian")
+sat.0 <- ggplot(sat.stayed, aes(satisfaction_level)) + geom_density(kernel = "gaussian", fill = 'blue', alpha = 0.2)
 sat.0
 ```
 
@@ -132,7 +132,7 @@ Indeed, Lower and medium salaries has higher number of employees who left.
 
 ## Take Away
 
-The factors were investigated and the results were unsurprising. For those who left, satisfaction level is lower, number of projects are lower, average monthly hour is lower, time spent with the company is lower, and salaries are lower.
+The factors were investigated and the results were unsurprising. For those who left, satisfaction level is lower, number of projects are lower, average monthly hour is higher, time spent with the company is higher, and salaries are lower.
 
 
 ## Prediction Model
@@ -158,7 +158,7 @@ Create dummy variables.
 hr.data.1 <- hr.data
 hr.data.1$left <- as.numeric(hr.data$left)
 
-hr.data.1$left <- ifelse(hr.data.1$left == "1", 1, 0)
+hr.data.1$left <- ifelse(hr.data.1$left == "2", 1, 0)
 
 dummy <- dummyVars(~.-1, hr.data.1)
 hr.dummy <- predict(dummy, hr.data.1)
@@ -195,7 +195,7 @@ accuracy <- ifelse(pred.lm > 0.5, 1, 0)
 table(test.1$left, accuracy)
 ```
 
-The accuracy of the logistic regression model is quite low at 77.7%. However, the result shows that the factors
+The accuracy of the logistic regression model is quite low. However, the result shows that the factors
 that affect the decision to leave based on the significance of their p-values.
 
 
@@ -214,7 +214,7 @@ accuracy.rf <- ifelse(pred.rf == "1", 1, 0)
 
 table(test.1$left, pred.rf)
 ```
-Here the accuracy dramatically improved to 98.76%. Quite high but XGboost has a good reputation of being better so we will try it as well.
+Here the accuracy dramatically improved compared to logistic regression. Quite high but XGboost has a good reputation of being better so we will try it as well.
 The variable importance table also shows that satisfaction level is the most influential factor among all factors considered.
 
 ##### XGBoost {.tabset}
@@ -242,7 +242,7 @@ accuracy.xg <- ifelse(pred.xg > 0.5, 1,0)
 
 table(test.1[,7], accuracy.xg)
 ```
-Indeed, XGboost has the highest accuracy at 99.06%.
+Indeed, XGboost has the highest accuracy.
 
 ##### Ensemble Modelling {.tabset}
 
@@ -266,7 +266,7 @@ accuracy.en <- ifelse(ensemble > 0.5, 1, 0)
 table(test.1[,7], accuracy.en)
 
 ```
-It is noticeable that the ensemble improved the accuracy by 0.06%. So at 99.13%, the ensemble model of XG and logistic regression is the best among all tried models.
+It is noticeable that the ensemble improved the accuracy. So the ensemble model of XG and logistic regression is the best among all tried models.
 
 
 ## Conclusion
